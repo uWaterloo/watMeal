@@ -40,7 +40,7 @@
         <div class="pHighlight"><span class="fieldName">Flex: </span>{{watcard.FlexBalance | currency}}</div>
         <div class="pHighlight"><span class="fieldName">Mealplan: </span>{{watcard.MeanPlanBalance | currency}}</div>
         <div class="pHighlight"><span class="fieldName">Effective Mealplan Dollars: </span>{{watcard.EBalance | currency}}</div>
-        <div class="pHighlight"><span class="fieldName">Suggested Daily Spending: </span>{{dailybudget.value | currency}}</div>
+        <div class="pHighlight"><span class="fieldName">Suggested Daily Spending: </span>{{watcard.value | currency}}</div>
     </div>
     <div widget-item ng-if="watcard.LastRecentTransactionExists">
         <div class="pDetails"><span class="fieldName">Daily Expenditure</span>:</div>
