@@ -17,7 +17,7 @@ angular.module('portalApp')
     $scope.saveCredentials = watcardFactory.saveCredentials;
     $scope.fromButton = false;
     $scope.transactions = watcardFactory.transactions;
-    //$scope.dailybudget = watcardFacorty
+    $scope.dailybudget = watcardFactory.dailybudget;
     
     $scope.$watch('loading.value', function() {
         //console.log('watchard loading watch', $scope.loading.value);
@@ -102,6 +102,11 @@ angular.module('portalApp')
     var transactions = {
        value: []  
     };
+    
+    var dailybudget = {
+       value: 0  
+    };
+    
     var init = function($scope) {
 
         //console.log(initialized.value);
@@ -150,7 +155,29 @@ angular.module('portalApp')
         var endDate = moment().tz("America/Toronto").format("M/D/YYYY");
         var startDate = endDate;
         // moment().subtract(4, 'month').tz("America/Toronto").format("M/D/YYYY");
-
+        
+        // Ghetto way to approx last date.
+		var today = new Date();
+        var lastday;
+        if ((0 <= today.getMonth()) && (today.getMonth() < 4)) {
+        	lastday = new Date(today.getFullYear(), 3, 23);
+        } else if ((4 <= today.getMonth()) && (today.getMonth() < 8)) {
+         	lastday = new Date(today.getFullYear(), 7, 23);   
+        } else {
+         	lastday = new Date(today.getFullYear(), 11, 23);
+        }
+        
+        console.log("&&&&&&&&&");
+        console.log(today.getYear());
+        console.log(lastday.getYear());
+        var daysleft = Math.abs(Math.floor((lastday - today)/(24*60*60*1000)));
+        
+        if (daysleft == 0) {
+          daysleft = 1;
+        }
+        
+        dailybudget.value = 10000/daysleft;
+        
         // Set post parameters
         var postParams = {
             acnt_1: uwid.value,
