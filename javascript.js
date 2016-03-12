@@ -18,7 +18,7 @@ angular.module('portalApp')
     $scope.fromButton = false;
     $scope.transactions = watcardFactory.transactions;
     $scope.dailybudget = watcardFactory.dailybudget;
-    
+
     $scope.$watch('loading.value', function() {
         //console.log('watchard loading watch', $scope.loading.value);
         if ($scope.loading.value) {
@@ -100,13 +100,13 @@ angular.module('portalApp')
         value: false
     };
     var transactions = {
-       value: []  
+        value: []
     };
-    
+
     var dailybudget = {
-       value: 0  
+        value: 0
     };
-    
+
     var init = function($scope) {
 
         //console.log(initialized.value);
@@ -124,7 +124,7 @@ angular.module('portalApp')
 
         // See if user has credentials saved into db
         $scope.portalHelpers.invokeServerFunction('getCredentials').then(function(data) {
-            console.log('get creds resonse: ', data);
+            //console.log('get creds resonse: ', data);
 
             for (var i in data) {
                 var row = data[i];
@@ -147,7 +147,7 @@ angular.module('portalApp')
     };
     var getWatcardInfo = function($scope) {
         getWatcardBalance($scope);
-        getWatcardHistory($scope);
+
     };
     var getWatcardHistory = function($scope) {
         watcard.LastRecentTransactionAmount = 0;
@@ -155,29 +155,9 @@ angular.module('portalApp')
         var endDate = moment().tz("America/Toronto").format("M/D/YYYY");
         var startDate = endDate;
         // moment().subtract(4, 'month').tz("America/Toronto").format("M/D/YYYY");
-        
-        // Ghetto way to approx last date.
-		var today = new Date();
-        var lastday;
-        if ((0 <= today.getMonth()) && (today.getMonth() < 4)) {
-        	lastday = new Date(today.getFullYear(), 3, 23);
-        } else if ((4 <= today.getMonth()) && (today.getMonth() < 8)) {
-         	lastday = new Date(today.getFullYear(), 7, 23);   
-        } else {
-         	lastday = new Date(today.getFullYear(), 11, 23);
-        }
-        
-        console.log("&&&&&&&&&");
-        console.log(today.getYear());
-        console.log(lastday.getYear());
-        var daysleft = Math.abs(Math.floor((lastday - today)/(24*60*60*1000)));
-        
-        if (daysleft == 0) {
-          daysleft = 1;
-        }
-        
-        dailybudget.value = 10000/daysleft;
-        
+
+
+
         // Set post parameters
         var postParams = {
             acnt_1: uwid.value,
@@ -200,7 +180,7 @@ angular.module('portalApp')
 
             var doc = document.implementation.createHTMLDocument("");
             doc.documentElement.innerHTML = response;
-            console.log(response);
+            //console.log(response);
             jq = $(doc);
 
             // Check for login error
@@ -212,18 +192,18 @@ angular.module('portalApp')
                 if (jq.find('#oneweb_message_financial_history').length != 0)
                     watcard.LastRecentTransactionExists = false;
                 else {
-                    console.log("HELLO");
+                    //console.log("HELLO");
                     var amount = 0
                     var row = 0;
                     var current = 0;
-                    
-                    
+
+
                     var len = jq.find('#oneweb_financial_history_table tr').length;
                     for (var i = 2; i < len; i++) {
-                         row = jq.find('#oneweb_financial_history_table tr').eq(i);
-                         current = parseFloat(row.find('#oneweb_financial_history_td_amount').text());
-                         transactions.value.push(current);
-                         amount += Math.abs(current);
+                        row = jq.find('#oneweb_financial_history_table tr').eq(i);
+                        current = parseFloat(row.find('#oneweb_financial_history_td_amount').text());
+                        transactions.value.push(current);
+                        amount += Math.abs(current);
                     }
 
                     var date = row.find('#oneweb_financial_history_td_date').text();
@@ -238,7 +218,28 @@ angular.module('portalApp')
                 watcard.LastRecentTransactionExists = false;
                 err.value = true;
             }
+            // Ghetto way to approx last date.
+            var today = new Date();
+            var lastday;
+            if ((0 <= today.getMonth()) && (today.getMonth() < 4)) {
+                lastday = new Date(today.getFullYear(), 3, 23);
+            } else if ((4 <= today.getMonth()) && (today.getMonth() < 8)) {
+                lastday = new Date(today.getFullYear(), 7, 23);
+            } else {
+                lastday = new Date(today.getFullYear(), 11, 23);
+            }
 
+            console.log("&&&&&&&&&");
+            console.log(today.getFullYear());
+            console.log(lastday.getFullYear());
+
+            var daysleft = Math.abs(Math.floor((lastday - today) / (24 * 60 * 60 * 1000)));
+
+            if (daysleft == 0) {
+                daysleft = 1;
+            }
+            console.log(watcard);
+            watcard.value = 2 * (watcard.MeanPlanBalance) / daysleft;
             sourceLoaded($scope);
         });
     }
@@ -258,7 +259,7 @@ angular.module('portalApp')
         }).success(function(response) {
             var doc = document.implementation.createHTMLDocument("");
             doc.documentElement.innerHTML = response;
-
+            getWatcardHistory($scope);
             jq = $(doc);
 
             // Check for login error
@@ -289,7 +290,8 @@ angular.module('portalApp')
 
                 if (!isNaN(mealBalance))
                     watcard.MeanPlanBalance = mealBalance;
-                    watcard.EBalance = mealBalance;
+                watcard.EBalance = mealBalance;
+                console.log("%%%%", watcard);
             } else {
                 //console.log("D");
                 err.value = true;
