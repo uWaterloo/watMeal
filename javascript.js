@@ -207,7 +207,7 @@ angular.module('portalApp')
                     }
 
                     var time = row.find('#oneweb_financial_history_td_time').text();
-
+					
                     watcard.WeekTot = weektotal;
                     watcard.LastRecentTransactionAmount = amount;
                     watcard.LastRecentTransactionDate = moment(date + " " + time, 'MM/DD/YYYY hh:mm:ss');
@@ -235,6 +235,8 @@ angular.module('portalApp')
                 daysleft = 1;
             }
             watcard.value = 2 * (watcard.MeanPlanBalance) / daysleft;
+            
+            watcard.continue = (watcard.value - amount)*daysleft;
             watcard.suggestweek = (2*(watcard.MeanPlanBalance) /daysleft)*7;
             sourceLoaded($scope);
         });
@@ -285,7 +287,7 @@ angular.module('portalApp')
                     watcard.FlexBalance = flexBalance;
 
                 if (!isNaN(mealBalance))
-                    watcard.MeanPlanBalance = mealBalance;
+                    watcard.MeanPlanBalance = mealBalance*2;
                 watcard.EBalance = mealBalance * 2;
 
             } else {
