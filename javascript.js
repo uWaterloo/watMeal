@@ -153,7 +153,7 @@ angular.module('portalApp')
         watcard.LastRecentTransactionAmount = 0;
         watcard.LastRecentTransactionDate = "";
         var endDate = moment().tz("America/Toronto").format("M/D/YYYY");
-        var startDate = endDate;
+        var startDate = moment().subtract(7, 'day').tz("America/Toronto").format("M/D/YYYY");
         // moment().subtract(4, 'month').tz("America/Toronto").format("M/D/YYYY");
 
 
@@ -196,19 +196,27 @@ angular.module('portalApp')
                     var amount = 0
                     var row = 0;
                     var current = 0;
-
-
+					var date;
+                    var weekcurr;
+                    var weektotal = 0;
+                    
+					var currdate = moment().tz("America/Toronto").format("MM/D/YYYY");
                     var len = jq.find('#oneweb_financial_history_table tr').length;
                     for (var i = 2; i < len; i++) {
                         row = jq.find('#oneweb_financial_history_table tr').eq(i);
-                        current = parseFloat(row.find('#oneweb_financial_history_td_amount').text());
-                        transactions.value.push(current);
-                        amount += Math.abs(current);
+                        date = row.find('#oneweb_financial_history_td_date').text();
+                        console.log("poo" + endDate);
+                       	if(date == currdate){
+                        	current = parseFloat(row.find('#oneweb_financial_history_td_amount').text());
+                        	amount += Math.abs(current);
+                        }
+                        weektotal += Math.abs(parseFloat(row.find('#oneweb_financial_history_td_amount').text()));
                     }
 
-                    var date = row.find('#oneweb_financial_history_td_date').text();
+                    
                     var time = row.find('#oneweb_financial_history_td_time').text();
-
+					
+                    watcard.WeekTot = weektotal;
                     watcard.LastRecentTransactionAmount = amount;
                     watcard.LastRecentTransactionDate = moment(date + " " + time, 'MM/DD/YYYY hh:mm:ss');
                     watcard.LastRecentTransactionExists = true;
@@ -290,7 +298,7 @@ angular.module('portalApp')
 
                 if (!isNaN(mealBalance))
                     watcard.MeanPlanBalance = mealBalance;
-                watcard.EBalance = mealBalance;
+                watcard.EBalance = mealBalance*2;
                 console.log("%%%%", watcard);
             } else {
                 //console.log("D");
