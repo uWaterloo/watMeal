@@ -1,6 +1,6 @@
-angular.module('PortalApp')
+angular.module('portalApp')
 
-.controller('watcardCtrl', ['$scope', 'watcardFactory', function ($scope, watcardFactory) {
+.controller('watMealCtrl', ['$scope', 'watcardFactory', function($scope, watcardFactory) {
     // Run once
     //$scope.portalHelpers.invokeServerFunction('createKeys');
 
@@ -16,82 +16,68 @@ angular.module('PortalApp')
     $scope.loading = watcardFactory.loading;
     $scope.saveCredentials = watcardFactory.saveCredentials;
     $scope.fromButton = false;
-
-    $scope.$watch('loading.value', function () {
+	$scope.transactions = watcardFactory.transactions;
+    
+    $scope.$watch('loading.value', function() {
         //console.log('watchard loading watch', $scope.loading.value);
-        if ($scope.loading.value)
-        {
+        if ($scope.loading.value) {
             $scope.portalHelpers.toggleLoading(true);
-            $scope.portalHelpers.showView('loading.html', 1,false);
-        }else{
+            $scope.portalHelpers.showView('loading.html', 1, false);
+        } else {
             if (!$scope.loggedIn.value) {
                 $scope.portalHelpers.showView('notLoggedIn.html', 1);
             } else {
                 $scope.portalHelpers.showView('main.html', 1);
             }
         }
-        
+
         if (!$scope.loading.value)
             $scope.portalHelpers.toggleLoading(false);
     });
 
     watcardFactory.init($scope);
-    $scope.$on('refresh', function () {
+    $scope.$on('refresh', function() {
         watcardFactory.initialized.value = false;
     });
 
     // attempt login
-    $scope.login = function () {
+    $scope.login = function() {
 
         $scope.fromButton = true;
-	    if ($scope.uwid.value == "" || $scope.pass.value == "")
-	    {
-	        $scope.err.value = true;
-	        return;
-	    }
-      $scope.err.value = false;
-      $scope.saveCredentials.value = true;	// Save credentials to db if login is successful
-      $scope.loading.value = true;
-      watcardFactory.getWatcardInfo($scope);
-	}
-    
+        if ($scope.uwid.value == "" || $scope.pass.value == "") {
+            $scope.err.value = true;
+            return;
+        }
+        $scope.err.value = false;
+        $scope.saveCredentials.value = true; // Save credentials to db if login is successful
+        $scope.loading.value = true;
+        watcardFactory.getWatcardInfo($scope);
+    }
+
     // logout - erase credentials on the server
-    $scope.logout = function(){
+    $scope.logout = function() {
         $scope.err.value = false;
         $scope.portalHelpers.toggleLoading(true);
-        $scope.portalHelpers.showView('loading.html', 1,false);
-      	
-      	$scope.portalHelpers.invokeServerFunction('logout').then(function(){
-          	$scope.loggedIn.value=false;
-          	$scope.loading.value = false;
-          	$scope.pass.value = "";
+        $scope.portalHelpers.showView('loading.html', 1, false);
 
-          	$scope.portalHelpers.showView('notLoggedIn.html', 1);
-          	$scope.portalHelpers.toggleLoading(false);
+        $scope.portalHelpers.invokeServerFunction('logout').then(function() {
+            $scope.loggedIn.value = false;
+            $scope.loading.value = false;
+            $scope.pass.value = "";
+
+            $scope.portalHelpers.showView('notLoggedIn.html', 1);
+            $scope.portalHelpers.toggleLoading(false);
         });
     }
 
 }])
 
-.controller('watcardNowCtrl', ['$scope', 'watcardFactory', function ($scope, watcardFactory) {
-    //console.log('watcard now ctrl');
-    $scope.loggedIn = watcardFactory.loggedIn;
-    $scope.loading = watcardFactory.loading;
-    $scope.watcard = watcardFactory.watcard;
-
-    $scope.$on('refresh', function () {
-        watcardFactory.initialized.value = false;
-    });
-    
-    watcardFactory.init($scope);
-
-    $scope.$emit('showNowlet', 'watcard');
-}])
-
-.factory('watcardFactory', ['$http', '$rootScope', function ($http, $rootScope) {
+.factory('watcardFactory', ['$http', '$rootScope', function($http, $rootScope) {
 
     var l = 2; // Counter for data sources, used to sync 2 data calls
-    var saveCredentials = { value: false }; // Save credentials if able to get data
+    var saveCredentials = {
+        value: false
+    }; // Save credentials if able to get data
 
     var uwid = {
         value: ""
@@ -100,12 +86,23 @@ angular.module('PortalApp')
         value: ""
     };
     var watcard = {}; // Stores model for the view
-    var loggedIn = { value: false }; // Indicates user is logged in
-    var err = { value: false }; // Indicates a login error has occured
-    var loading = { value: false };
-    var initialized = { value: false };
-    var init = function ($scope) {
-        
+    var loggedIn = {
+        value: false
+    }; // Indicates user is logged in
+    var err = {
+        value: false
+    }; // Indicates a login error has occured
+    var loading = {
+        value: false
+    };
+    var initialized = {
+        value: false
+    };
+    var transactions = {
+       value: []  
+    };
+    var init = function($scope) {
+
         //console.log(initialized.value);
 
         if (initialized.value) {
@@ -120,13 +117,13 @@ angular.module('PortalApp')
         //console.log('initing watcard..:',$scope.portalHelpers.invokeServerFunction);
 
         // See if user has credentials saved into db
-        $scope.portalHelpers.invokeServerFunction('getCredentials').then(function (data) {
+        $scope.portalHelpers.invokeServerFunction('getCredentials').then(function(data) {
             console.log('get creds resonse: ', data);
 
             for (var i in data) {
                 var row = data[i];
                 if (row.name == "Pass")
-                    // no credentials - show login page with pre-filled uwId
+                // no credentials - show login page with pre-filled uwId
                     if (row.value == "") {
                         loggedIn.value = false;
                         loading.value = false;
@@ -142,15 +139,16 @@ angular.module('PortalApp')
             }
         });
     };
-    var getWatcardInfo = function ($scope) {
+    var getWatcardInfo = function($scope) {
         getWatcardBalance($scope);
         getWatcardHistory($scope);
     };
-    var getWatcardHistory = function ($scope) {
+    var getWatcardHistory = function($scope) {
         watcard.LastRecentTransactionAmount = 0;
         watcard.LastRecentTransactionDate = "";
         var endDate = moment().tz("America/Toronto").format("M/D/YYYY");
-        var startDate = moment().subtract(4, 'month').tz("America/Toronto").format("M/D/YYYY");
+        var startDate = endDate;
+        // moment().subtract(4, 'month').tz("America/Toronto").format("M/D/YYYY");
 
         // Set post parameters
         var postParams = {
@@ -169,12 +167,12 @@ angular.module('PortalApp')
         $http.post("/Develop/PostProxy", {
             values: postParams,
             url: "https://account.watcard.uwaterloo.ca/watgopher661.asp"
-        }).success(function (response) {
+        }).success(function(response) {
             //console.log("RESPONSE: ", response);
 
             var doc = document.implementation.createHTMLDocument("");
             doc.documentElement.innerHTML = response;
-
+            console.log(response);
             jq = $(doc);
 
             // Check for login error
@@ -186,8 +184,20 @@ angular.module('PortalApp')
                 if (jq.find('#oneweb_message_financial_history').length != 0)
                     watcard.LastRecentTransactionExists = false;
                 else {
-                    var row = jq.find('#oneweb_financial_history_table tr').eq(2);
-                    var amount = parseFloat(row.find('#oneweb_financial_history_td_amount').text());
+                    console.log("HELLO");
+                    var amount = 0
+                    var row = 0;
+					var current = 0;
+                    
+                    
+                    var len = jq.find('#oneweb_financial_history_table tr').length;
+                    for (var i = 2; i < len; i++) {
+                         row = jq.find('#oneweb_financial_history_table tr').eq(i);
+                         current = parseFloat(row.find('#oneweb_financial_history_td_amount').text());
+                         transactions.value.push(current);
+                         amount += current;
+                    }
+
                     var date = row.find('#oneweb_financial_history_td_date').text();
                     var time = row.find('#oneweb_financial_history_td_time').text();
 
@@ -204,7 +214,7 @@ angular.module('PortalApp')
             sourceLoaded($scope);
         });
     }
-    var getWatcardBalance = function ($scope) {
+    var getWatcardBalance = function($scope) {
         var postParams = {
             acnt_1: uwid.value,
             acnt_2: pass.value,
@@ -217,7 +227,7 @@ angular.module('PortalApp')
         $http.post("/Develop/PostProxy", {
             values: postParams,
             url: 'https://account.watcard.uwaterloo.ca/watgopher661.asp'
-        }).success(function (response) {
+        }).success(function(response) {
             var doc = document.implementation.createHTMLDocument("");
             doc.documentElement.innerHTML = response;
 
@@ -230,7 +240,7 @@ angular.module('PortalApp')
                 var flexBalance = 0;
                 var mealBalance = 0;
                 var i = 0;
-                balanceObjects.each(function () {
+                balanceObjects.each(function() {
                     if (i < 9) {
                         var text = $(this).text().trim();
                         while (text.indexOf(',') > -1) {
@@ -259,7 +269,7 @@ angular.module('PortalApp')
             sourceLoaded($scope);
         });
     }
-    var sourceLoaded = function ($scope) {
+    var sourceLoaded = function($scope) {
         // console.log('source loaded:', l);
         l--;
         if (l == 0) {
@@ -275,7 +285,7 @@ angular.module('PortalApp')
                     $scope.portalHelpers.invokeServerFunction('saveCredentials', {
                         pass: pass.value,
                         myUwId: uwid.value
-                    }).then(function (r) { //console.log('savecreds response', r);
+                    }).then(function(r) { //console.log('savecreds response', r);
                     });
                     saveCredentials.value = false;
                 }
@@ -283,7 +293,7 @@ angular.module('PortalApp')
                 // Error occured - show login form with an error
                 pass.value = "";
             }
-			$scope.$emit('masonry.reload');
+            $scope.$emit('masonry.reload');
         }
     }
 
