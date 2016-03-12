@@ -35,24 +35,24 @@
     </div>
 </script>
 <script type="text/ng-template" id="main.html">
-    <div widget-item> <h2>Balance</h2></div>
     <div widget-item>
+        <h2>Budget & Balance</h2></div>
+    <div widget-item>
+        <div class="pDetails"><span class="fieldName">Daily Expenditure </span>:</div>
+        <div class="pHighlight"><span class="fieldName">Suggested: </span>{{watcard.value | currency}}</div>
+        <div class="pHighlight"><span class="fieldName">Actual: </span> ${{watcard.LastRecentTransactionAmount | number:2}}</span>
+        </div>
+        <br>
+        <div class="pDetails"><span class="fieldName">Weekly Expenditure</span>:</div>
+        <div class="pHighlight"><span class="fieldName">Suggested: </span>{{watcard.suggestweek | currency}}</div>
+        <div class="pHighlight"><span class="fieldName">Actual: </span>{{watcard.WeekTot | currency}}</div>
+        <br>
+        <div class="pDetails"><span class="fieldName">Total Balance</span>:</div>
         <div class="pHighlight"><span class="fieldName">Flex: </span>{{watcard.FlexBalance | currency}}</div>
         <div class="pHighlight"><span class="fieldName">Mealplan: </span>{{watcard.MeanPlanBalance | currency}}</div>
-        <div class="pHighlight"><span class="fieldName">Suggested Weekly Spending: </span>{{watcard.suggestweek | currency}}</div>
-        <div class="pHighlight"><span class="fieldName">Suggested Daily Spending: </span>{{watcard.value | currency}}</div>
-        <widget-icon name="goose-watch"></widget-icon>
-        <widget-icon name="goose-watch"></widget-icon>
-        <widget-icon name="goose-watch"></widget-icon>
-
-        <div class="pHighlight"><span class="fieldName">Weekly Spending: </span>{{watcard.WeekTot | currency}}</div>
-        <div class="pHighlight"><span class="fieldName">Daily Expenditure</span>: ${{watcard.LastRecentTransactionAmount | number:2}}</span>
+        <br>
+        <div class="pHighlight"><span class="fieldName">Amounts presented here represent purchasing power.</span>
         </div>
-
-
-
-
-    </div>
 
     </div>
 </script>
