@@ -221,10 +221,10 @@ angular.module('portalApp')
             // Ghetto way to approx last date.
             var today = new Date();
             var lastday;
-            if ((0 <= today.getMonth()) && (today.getMonth() < 4)) {
-                lastday = new Date(today.getFullYear(), 3, 23);
-            } else if ((4 <= today.getMonth()) && (today.getMonth() < 8)) {
-                lastday = new Date(today.getFullYear(), 7, 23);
+            if ((0 <= today.getMonth()) && (today.getMonth() <= 4)) {
+                lastday = new Date(today.getFullYear(), 4, 23);
+            } else if ((4 <= today.getMonth()) && (today.getMonth() <= 8)) {
+                lastday = new Date(today.getFullYear(), 8, 23);
             } else {
                 lastday = new Date(today.getFullYear(), 11, 23);
             }
