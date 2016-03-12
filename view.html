@@ -41,17 +41,18 @@
         <div class="pDetails"><span class="fieldName">Daily Expenditure</span>:</div>
         <div class="pHighlight"><span class="fieldName">Suggested: </span>{{watcard.value | currency}}</div>
         <div class="pHighlight"><span class="fieldName">Actual: </span> ${{watcard.LastRecentTransactionAmount | number:2}}</span>
-        <div ><span class="fieldName">If you were to continue spending this amount each day, you would have </span>{{watcard.continue | currency}}</div>
+            <br>
+                <br>
+            <div class="pDetails"><span class="fieldName">Weekly Expenditure</span>:</div>
+            <div class="pHighlight"><span class="fieldName">Suggested: </span>{{watcard.suggestweek | currency}}</div>
+            <div class="pHighlight"><span class="fieldName">Actual: </span>{{watcard.WeekTot | currency}}</div>
+            <br>
+            <div class="pDetails"><span class="fieldName">Total Balance</span>:</div>
+            <div class="pHighlight"><span class="fieldName">Flex: </span>{{watcard.FlexBalance | currency}}</div>
+            <div class="pHighlight"><span class="fieldName">Mealplan: </span>{{watcard.MeanPlanBalance | currency}}</div>
+            <br>
+            <div><span class="fieldName">If you were to continue spending this amount each day, you would have </span>{{watcard.continue | currency}}</div>
         </div>
-        <br>
-        <div class="pDetails"><span class="fieldName">Weekly Expenditure</span>:</div>
-        <div class="pHighlight"><span class="fieldName">Suggested: </span>{{watcard.suggestweek | currency}}</div>
-        <div class="pHighlight"><span class="fieldName">Actual: </span>{{watcard.WeekTot | currency}}</div>
-            
-        <br>
-        <div class="pDetails"><span class="fieldName">Total Balance</span>:</div>
-        <div class="pHighlight"><span class="fieldName">Flex: </span>{{watcard.FlexBalance | currency}}</div>
-        <div class="pHighlight"><span class="fieldName">Mealplan: </span>{{watcard.MeanPlanBalance | currency}}</div>
         <br>
         <div class="pHighlight"><span class="fieldName">*Amounts presented here represent purchasing power.</span>
         </div>
