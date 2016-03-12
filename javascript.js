@@ -16,7 +16,7 @@ angular.module('portalApp')
     $scope.loading = watcardFactory.loading;
     $scope.saveCredentials = watcardFactory.saveCredentials;
     $scope.fromButton = false;
-	$scope.transactions = watcardFactory.transactions;
+    $scope.transactions = watcardFactory.transactions;
     
     $scope.$watch('loading.value', function() {
         //console.log('watchard loading watch', $scope.loading.value);
@@ -187,7 +187,7 @@ angular.module('portalApp')
                     console.log("HELLO");
                     var amount = 0
                     var row = 0;
-					var current = 0;
+                    var current = 0;
                     
                     
                     var len = jq.find('#oneweb_financial_history_table tr').length;
@@ -195,7 +195,7 @@ angular.module('portalApp')
                          row = jq.find('#oneweb_financial_history_table tr').eq(i);
                          current = parseFloat(row.find('#oneweb_financial_history_td_amount').text());
                          transactions.value.push(current);
-                         amount += current;
+                         amount += Math.abs(current);
                     }
 
                     var date = row.find('#oneweb_financial_history_td_date').text();
@@ -261,6 +261,7 @@ angular.module('portalApp')
 
                 if (!isNaN(mealBalance))
                     watcard.MeanPlanBalance = mealBalance;
+                    watcard.EBalance = mealBalance*2;
             } else {
                 //console.log("D");
                 err.value = true;
