@@ -20,7 +20,7 @@ angular.module('portalApp')
     $scope.dailybudget = watcardFactory.dailybudget;
 
     $scope.$watch('loading.value', function() {
-        //console.log('watchard loading watch', $scope.loading.value);
+        
         if ($scope.loading.value) {
             $scope.portalHelpers.toggleLoading(true);
             $scope.portalHelpers.showView('loading.html', 1, false);
@@ -109,7 +109,7 @@ angular.module('portalApp')
 
     var init = function($scope) {
 
-        //console.log(initialized.value);
+        
 
         if (initialized.value) {
             $rootScope.$broadcast('widgetReady', 'watcard');
@@ -120,11 +120,11 @@ angular.module('portalApp')
         loading.value = true;
         $rootScope.$broadcast('widgetReady', 'watcard');
 
-        //console.log('initing watcard..:',$scope.portalHelpers.invokeServerFunction);
+        
 
         // See if user has credentials saved into db
         $scope.portalHelpers.invokeServerFunction('getCredentials').then(function(data) {
-            //console.log('get creds resonse: ', data);
+            
 
             for (var i in data) {
                 var row = data[i];
@@ -176,23 +176,23 @@ angular.module('portalApp')
             values: postParams,
             url: "https://account.watcard.uwaterloo.ca/watgopher661.asp"
         }).success(function(response) {
-            //console.log("RESPONSE: ", response);
+            
 
             var doc = document.implementation.createHTMLDocument("");
             doc.documentElement.innerHTML = response;
-            //console.log(response);
+            
             jq = $(doc);
 
             // Check for login error
             if (jq.find('#oneweb_message_invalid_login').length == 0) {
-                //console.log("A");
+                
                 // Scrape out data
 
                 // Check if any history records exist
                 if (jq.find('#oneweb_message_financial_history').length != 0)
                     watcard.LastRecentTransactionExists = false;
                 else {
-                    //console.log("HELLO");
+                    
                     var amount = 0
                     var row = 0;
                     var current = 0;
@@ -205,7 +205,6 @@ angular.module('portalApp')
                     for (var i = 2; i < len; i++) {
                         row = jq.find('#oneweb_financial_history_table tr').eq(i);
                         date = row.find('#oneweb_financial_history_td_date').text();
-                        console.log("poo" + endDate);
                        	if(date == currdate){
                         	current = parseFloat(row.find('#oneweb_financial_history_td_amount').text());
                         	amount += Math.abs(current);
@@ -213,7 +212,6 @@ angular.module('portalApp')
                         weektotal += Math.abs(parseFloat(row.find('#oneweb_financial_history_td_amount').text()));
                     }
 
-                    
                     var time = row.find('#oneweb_financial_history_td_time').text();
 					
                     watcard.WeekTot = weektotal;
@@ -222,7 +220,6 @@ angular.module('portalApp')
                     watcard.LastRecentTransactionExists = true;
                 }
             } else {
-                //console.log("B");
                 watcard.LastRecentTransactionExists = false;
                 err.value = true;
             }
@@ -237,16 +234,11 @@ angular.module('portalApp')
                 lastday = new Date(today.getFullYear(), 11, 23);
             }
 
-            console.log("&&&&&&&&&");
-            console.log(today.getFullYear());
-            console.log(lastday.getFullYear());
-
             var daysleft = Math.abs(Math.floor((lastday - today) / (24 * 60 * 60 * 1000)));
 
             if (daysleft == 0) {
                 daysleft = 1;
             }
-            console.log(watcard);
             watcard.value = 2 * (watcard.MeanPlanBalance) / daysleft;
             sourceLoaded($scope);
         });
@@ -272,7 +264,7 @@ angular.module('portalApp')
 
             // Check for login error
             if (jq.find('#oneweb_balance_information_table #oneweb_balance_information_td_amount').length != 0) {
-                //console.log("C");
+               
                 var balanceObjects = jq.find('#oneweb_balance_information_table #oneweb_balance_information_td_amount');
                 var flexBalance = 0;
                 var mealBalance = 0;
@@ -299,9 +291,9 @@ angular.module('portalApp')
                 if (!isNaN(mealBalance))
                     watcard.MeanPlanBalance = mealBalance;
                 watcard.EBalance = mealBalance*2;
-                console.log("%%%%", watcard);
+                
             } else {
-                //console.log("D");
+                
                 err.value = true;
             }
 
@@ -309,7 +301,7 @@ angular.module('portalApp')
         });
     }
     var sourceLoaded = function($scope) {
-        // console.log('source loaded:', l);
+       
         l--;
         if (l == 0) {
             // If both sources were loaded
@@ -320,11 +312,11 @@ angular.module('portalApp')
                 loggedIn.value = true;
                 // Save credentials to db if this was invoked from the login view
                 if (saveCredentials.value) {
-                    //console.log('saving: ',uwid)
+                    
                     $scope.portalHelpers.invokeServerFunction('saveCredentials', {
                         pass: pass.value,
                         myUwId: uwid.value
-                    }).then(function(r) { //console.log('savecreds response', r);
+                    }).then(function(r) { 
                     });
                     saveCredentials.value = false;
                 }
