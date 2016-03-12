@@ -16,7 +16,6 @@ angular.module('portalApp')
     $scope.loading = watcardFactory.loading;
     $scope.saveCredentials = watcardFactory.saveCredentials;
     $scope.fromButton = false;
-    $scope.transactions = watcardFactory.transactions;
     $scope.dailybudget = watcardFactory.dailybudget;
 
     $scope.$watch('loading.value', function() {
@@ -99,9 +98,6 @@ angular.module('portalApp')
     var initialized = {
         value: false
     };
-    var transactions = {
-        value: []
-    };
 
     var dailybudget = {
         value: 0
@@ -119,8 +115,6 @@ angular.module('portalApp')
         initialized.value = true;
         loading.value = true;
         $rootScope.$broadcast('widgetReady', 'watcard');
-
-
 
         // See if user has credentials saved into db
         $scope.portalHelpers.invokeServerFunction('getCredentials').then(function(data) {
@@ -223,6 +217,7 @@ angular.module('portalApp')
                 watcard.LastRecentTransactionExists = false;
                 err.value = true;
             }
+            
             // Ghetto way to approx last date.
             var today = new Date();
             var lastday;
