@@ -21,7 +21,7 @@ function getCredentials(){
   	SetEncryptionSettings();
   	var queryResult = JSON.parse(db.Execute('SELECT value, name FROM credentials WHERE userId=@currentUser'));
   	if(queryResult.length==0)
-      return '[{"value":"","name":"Pass"},{"value":"'+Portal.Get('uwId')+'","name":"uwId"}]';
+      return '[{"value":"","name":"Pass"},{"value":"' + user.Student.StudentNumber + '","name":"uwId"}]';
     else{
       for(var i in queryResult)
       {
