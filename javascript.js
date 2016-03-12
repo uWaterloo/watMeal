@@ -20,7 +20,7 @@ angular.module('portalApp')
     $scope.dailybudget = watcardFactory.dailybudget;
 
     $scope.$watch('loading.value', function() {
-        
+
         if ($scope.loading.value) {
             $scope.portalHelpers.toggleLoading(true);
             $scope.portalHelpers.showView('loading.html', 1, false);
@@ -109,7 +109,7 @@ angular.module('portalApp')
 
     var init = function($scope) {
 
-        
+
 
         if (initialized.value) {
             $rootScope.$broadcast('widgetReady', 'watcard');
@@ -120,11 +120,11 @@ angular.module('portalApp')
         loading.value = true;
         $rootScope.$broadcast('widgetReady', 'watcard');
 
-        
+
 
         // See if user has credentials saved into db
         $scope.portalHelpers.invokeServerFunction('getCredentials').then(function(data) {
-            
+
 
             for (var i in data) {
                 var row = data[i];
@@ -176,44 +176,44 @@ angular.module('portalApp')
             values: postParams,
             url: "https://account.watcard.uwaterloo.ca/watgopher661.asp"
         }).success(function(response) {
-            
+
 
             var doc = document.implementation.createHTMLDocument("");
             doc.documentElement.innerHTML = response;
-            
+
             jq = $(doc);
 
             // Check for login error
             if (jq.find('#oneweb_message_invalid_login').length == 0) {
-                
+
                 // Scrape out data
 
                 // Check if any history records exist
                 if (jq.find('#oneweb_message_financial_history').length != 0)
                     watcard.LastRecentTransactionExists = false;
                 else {
-                    
+
                     var amount = 0
                     var row = 0;
                     var current = 0;
-					var date;
+                    var date;
                     var weekcurr;
                     var weektotal = 0;
-                    
-					var currdate = moment().tz("America/Toronto").format("MM/D/YYYY");
+
+                    var currdate = moment().tz("America/Toronto").format("MM/D/YYYY");
                     var len = jq.find('#oneweb_financial_history_table tr').length;
                     for (var i = 2; i < len; i++) {
                         row = jq.find('#oneweb_financial_history_table tr').eq(i);
                         date = row.find('#oneweb_financial_history_td_date').text();
-                       	if(date == currdate){
-                        	current = parseFloat(row.find('#oneweb_financial_history_td_amount').text());
-                        	amount += Math.abs(current);
+                        if (date == currdate) {
+                            current = parseFloat(row.find('#oneweb_financial_history_td_amount').text());
+                            amount += Math.abs(current);
                         }
                         weektotal += Math.abs(parseFloat(row.find('#oneweb_financial_history_td_amount').text()));
                     }
 
                     var time = row.find('#oneweb_financial_history_td_time').text();
-					
+
                     watcard.WeekTot = weektotal;
                     watcard.LastRecentTransactionAmount = amount;
                     watcard.LastRecentTransactionDate = moment(date + " " + time, 'MM/DD/YYYY hh:mm:ss');
@@ -264,7 +264,7 @@ angular.module('portalApp')
 
             // Check for login error
             if (jq.find('#oneweb_balance_information_table #oneweb_balance_information_td_amount').length != 0) {
-               
+
                 var balanceObjects = jq.find('#oneweb_balance_information_table #oneweb_balance_information_td_amount');
                 var flexBalance = 0;
                 var mealBalance = 0;
@@ -290,10 +290,10 @@ angular.module('portalApp')
 
                 if (!isNaN(mealBalance))
                     watcard.MeanPlanBalance = mealBalance;
-                watcard.EBalance = mealBalance*2;
-                
+                watcard.EBalance = mealBalance * 2;
+
             } else {
-                
+
                 err.value = true;
             }
 
@@ -301,7 +301,7 @@ angular.module('portalApp')
         });
     }
     var sourceLoaded = function($scope) {
-       
+
         l--;
         if (l == 0) {
             // If both sources were loaded
@@ -312,12 +312,11 @@ angular.module('portalApp')
                 loggedIn.value = true;
                 // Save credentials to db if this was invoked from the login view
                 if (saveCredentials.value) {
-                    
+
                     $scope.portalHelpers.invokeServerFunction('saveCredentials', {
                         pass: pass.value,
                         myUwId: uwid.value
-                    }).then(function(r) { 
-                    });
+                    }).then(function(r) {});
                     saveCredentials.value = false;
                 }
             } else {
