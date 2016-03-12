@@ -1,22 +1,60 @@
-<script type="text/ng-template" id="main.html"> 
-        <widget-row>
-            <widget-cell>
-                <h2>Hello</h2>
-            </widget-cell>
-        </widget-row>
-
-		<widget-row>
-            <widget-cell>
-                <h2>{{data.value.message}}</h2>
-            </widget-cell>
-        </widget-row>
+<script type="text/ng-template" id="loading.html">
+    <div widget-item>
+        <div class="pDetails">
+            Loading..
+        </div>
+    </div>
 </script>
+<script type="text/ng-template" id="notLoggedIn.html">
+    <widget-row>
+        <widget-cell>
+            <div class="pIntro">Please login to WatCard to see your balance</div>
+            <div class="pDetails">
+                Tip: You can create your pin on the <a href="http://www.watcard.uwaterloo.ca/manage.html">WatCard site</a>.
+            </div>
+        </widget-cell>
+    </widget-row>
 
-<!-- Menu template -->
+    <div widget-item>
+        <form role="form" style="max-width:263px;" ng-submit="login()">
+            <div class="form-group portalForm">
+                <label for="linkText" class="textLabel">WatCard Number: </label>
+                <input id="studentId" class="form-control" type="text" ng-model="uwid.value" ng-model-options="{ debounce: 150 }" />
+                <label for="linkUrl" class="textLabel" style="margin-top:10px;">PIN: </label>
+                <input id="password" class="form-control" type="password" ng-model="pass.value" ng-model-options="{ debounce: 150 }" />
+            </div>
+            <button class="widgetButton fill" style="margin-top:10px;">
+                Login
+            </button>
+        </form>
+    </div>
+    <div widget-item>
+        <div class="pDetails accent" ng-if="err.value && fromButton">
+            Information you have entered is incorrect. Please try again.
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="main.html">
+    <div widget-item><h2>Balance</h2></div>
+    <div widget-item>
+        <div class="pHighlight"><span class="fieldName">Flex: </span>{{watcard.FlexBalance | currency}}</div>
+        <div class="pHighlight"><span class="fieldName">Mealplan: </span>{{watcard.MeanPlanBalance | currency}}</div>
+    </div>
+    <div widget-item ng-if="watcard.LastRecentTransactionExists">
+        <div class="pDetails"><span class="fieldName">Last transaction</span> (within 4 months):</div>
+        <div class="pHighlight">
+            <span class="fieldName">${{watcard.LastRecentTransactionAmount | number:2}}</span>
+            on {{watcard.LastRecentTransactionDate | momentDate:'MMMM DD, YYYY h:mm'}}
+        </div>
+    </div>
+    <div widget-item>
+        <a class="widgetButton" href="https://account.watcard.uwaterloo.ca/addfunds.asp" target="_blank">Add funds</a>
+    </div>
+</script>
 <script type="text/ng-template" id="widgetMenu.html">
-    <li>
-        <a>
-            Menu button
+    <li ng-if="loggedIn">
+        <a ng-click="logout()">
+            Logout
         </a>
     </li>
 </script>
