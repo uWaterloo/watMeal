@@ -234,9 +234,10 @@ angular.module('portalApp')
             if (daysleft == 0) {
                 daysleft = 1;
             }
-            watcard.value = 2 * (watcard.MeanPlanBalance) / daysleft;
+            watcard.value = (watcard.MeanPlanBalance) / daysleft;
             
-            watcard.continue = (watcard.value - amount)*daysleft;
+            watcard.continue = watcard.MeanPlanBalance - daysleft*amount;
+            
             watcard.suggestweek = (2*(watcard.MeanPlanBalance) /daysleft)*7;
             sourceLoaded($scope);
         });
