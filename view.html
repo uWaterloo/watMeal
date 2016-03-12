@@ -35,7 +35,8 @@
     </div>
 </script>
 <script type="text/ng-template" id="main.html">
-    <div widget-item><h2>Balance</h2></div>
+    <div widget-item>
+        <h2>Balance</h2></div>
     <div widget-item>
         <div class="pHighlight"><span class="fieldName">Flex: </span>{{watcard.FlexBalance | currency}}</div>
         <div class="pHighlight"><span class="fieldName">Mealplan: </span>{{watcard.MeanPlanBalance | currency}}</div>
@@ -46,8 +47,7 @@
     <div widget-item ng-if="watcard.LastRecentTransactionExists">
         <div class="pDetails"><span class="fieldName">Daily Expenditure</span>:</div>
         <div class="pHighlight">
-            <span class="fieldName">${{watcard.LastRecentTransactionAmount | number:2}}</span>
-            on {{watcard.LastRecentTransactionDate | momentDate:'MMMM DD, YYYY'}}
+            <span class="fieldName">${{watcard.LastRecentTransactionAmount | number:2}}</span> on {{watcard.LastRecentTransactionDate | momentDate:'MMMM DD, YYYY'}}
         </div>
     </div>
 </script>
