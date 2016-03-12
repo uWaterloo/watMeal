@@ -17,6 +17,7 @@ angular.module('portalApp')
     $scope.saveCredentials = watcardFactory.saveCredentials;
     $scope.fromButton = false;
     $scope.transactions = watcardFactory.transactions;
+    //$scope.dailybudget = watcardFacorty
     
     $scope.$watch('loading.value', function() {
         //console.log('watchard loading watch', $scope.loading.value);
@@ -261,7 +262,7 @@ angular.module('portalApp')
 
                 if (!isNaN(mealBalance))
                     watcard.MeanPlanBalance = mealBalance;
-                    watcard.EBalance = mealBalance*2;
+                    watcard.EBalance = mealBalance;
             } else {
                 //console.log("D");
                 err.value = true;
