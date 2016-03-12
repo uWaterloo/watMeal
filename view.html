@@ -45,9 +45,12 @@
         <div class="pHighlight"><span class="fieldName">Weekly Spending: </span>{{watcard.WeekTot | currency}}</div>
     </div>
     <div widget-item ng-if="watcard.LastRecentTransactionExists">
-        <div class="pDetails"><span class="fieldName">Daily Expenditure</span>:</div>
+        <div class="pDetails"><span class="fieldName"> 
+            <br><widget-icon name="goose-watch"></widget-icon> Daily Expenditure
+            </span>:</div>
         <div class="pHighlight">
-            <span class="fieldName">${{watcard.LastRecentTransactionAmount | number:2}}</span> on {{watcard.LastRecentTransactionDate | momentDate:'MMMM DD, YYYY'}}
+            <span class="fieldName">${{watcard.LastRecentTransactionAmount | number:2}}</span>
+            
         </div>
     </div>
 </script>
