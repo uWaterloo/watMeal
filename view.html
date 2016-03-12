@@ -39,16 +39,15 @@
     <div widget-item>
         <div class="pHighlight"><span class="fieldName">Flex: </span>{{watcard.FlexBalance | currency}}</div>
         <div class="pHighlight"><span class="fieldName">Mealplan: </span>{{watcard.MeanPlanBalance | currency}}</div>
+        <div class="pHighlight"><span class="fieldName">Effective Mealplan Dollars: </span>{{watcard.EBalance | currency}}</div>
+        <div class="pHighlight"><span class="fieldName">Suggested Daily Spending: </span>{{watcard.EBalance | currency}}</div>
     </div>
     <div widget-item ng-if="watcard.LastRecentTransactionExists">
-        <div class="pDetails"><span class="fieldName">Last transaction</span> (within 4 months):</div>
+        <div class="pDetails"><span class="fieldName">Daily Expenditure</span>:</div>
         <div class="pHighlight">
             <span class="fieldName">${{watcard.LastRecentTransactionAmount | number:2}}</span>
-            on {{watcard.LastRecentTransactionDate | momentDate:'MMMM DD, YYYY h:mm'}}
+            on {{watcard.LastRecentTransactionDate | momentDate:'MMMM DD, YYYY'}}
         </div>
-    </div>
-    <div widget-item>
-        <a class="widgetButton" href="https://account.watcard.uwaterloo.ca/addfunds.asp" target="_blank">Add funds</a>
     </div>
 </script>
 <script type="text/ng-template" id="widgetMenu.html">
